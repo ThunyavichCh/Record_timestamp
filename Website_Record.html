@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan Logger</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    input, button { padding: 10px; margin-top: 10px; }
+    .log-entry { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h2>ระบบบันทึกเวลาการสแกน</h2>
+
+  <input type="text" id="scanInput" placeholder="วางข้อมูลจากการสแกน...">
+  <button onclick="logScan()">บันทึกเวลา</button>
+
+  <h3>บันทึกทั้งหมด</h3>
+  <div id="logContainer"></div>
+
+  <hr>
+  <h4>เฉพาะผู้ดูแลระบบ</h4>
+  <input type="password" id="adminPass" placeholder="ใส่รหัสผ่าน">
+  <button onclick="clearData()">🧹 Clear Data</button>
+
+  <script>
+    const ADMIN_PASSWORD = "mySecret123"; // แก้เป็นรหัสผ่านของคุณ
+
+    function logScan() {
+      const input = document.getElementById("scanInput").value.trim();
+      if (!input) return;
+
+      const logs = JSON.parse(localStorage.getItem("scanLogs") || "[]");
+      logs.push({ content: input, timestamp: new Date().toISOString() });
+      localStorage.setItem("scanLogs", JSON.stringify(logs));
+      document.getElementById("scanInput").value = "";
+      renderLogs();
+    }
